@@ -29,7 +29,7 @@ environ.Env.read_env(ENV_FILE_PATH)
 SECRET_KEY = env.str('SECRET_KEY', 'secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG')
+# DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = ["*"]
 
@@ -88,8 +88,6 @@ DATABASES = {
         'USER': env.str('POSTGRES_USER'),
         'PASSWORD': env.str('POSTGRES_PASSWORD'),
         'HOST': env.str('POSTGRES_HOST', default='127.0.0.1'),
-        'PORT': env.str('POSTGRES_PORT'),
-
     }
 }
 
