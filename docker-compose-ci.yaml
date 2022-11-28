@@ -12,11 +12,12 @@ services:
     image: alllvp/diploma:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     restart: always
     environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy
@@ -27,11 +28,12 @@ services:
   migrations:
     image: alllvp/diploma:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy
