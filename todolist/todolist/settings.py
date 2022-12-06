@@ -9,14 +9,13 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import os
 from pathlib import Path
 import environ
 
 env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV_FILE_PATH = BASE_DIR.joinpath('.env')
 
@@ -126,7 +125,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR.joinpath("todolist/static")
+STATIC_ROOT = BASE_DIR.joinpath("static")
 
 
 # Default primary key field type
@@ -135,3 +134,5 @@ STATIC_ROOT = BASE_DIR.joinpath("todolist/static")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.User'
+#
+#
