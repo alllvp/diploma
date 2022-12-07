@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import generics, status, permissions
 
 from . import serializers
+from .serializers import UpdatePasswordSerializer
 
 USER_MODEL = get_user_model()
 
@@ -35,4 +36,12 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UpdatePasswordView(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UpdatePasswordSerializer
+
+    def get_object(self):
+        return self.request.user
 
