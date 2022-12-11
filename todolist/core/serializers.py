@@ -17,21 +17,14 @@ class PasswordField(serializers.CharField):
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    # password = serializers.CharField(write_only=True)
-    # password_repeat = serializers.CharField(write_only=True)
     password = PasswordField
-    password_repeat = PasswordField
+    password_repeat = serializers.CharField(write_only=True)
 
 
     def validate(self, attrs):
         password = attrs.get('password')
         password_repeat = attrs.pop('password_repeat')
 
-        # try:
-        #     validate_password(password)
-        # except Exception as e:
-        #     raise serializers.ValidationError({'password': e.messages})
-        #
         if password != password_repeat:
             raise serializers.ValidationError('Passwords do not match')
 
@@ -50,7 +43,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
-    # password = serializers.CharField(required=True, write_only=True)
     password = PasswordField(required=True)
 
     def create(self, validated_data):
@@ -77,8 +69,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class UpdatePasswordSerializer(serializers.Serializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    # old_password = serializers.CharField(required=True, write_only=True)
-    # new_password = serializers.CharField(required=True, write_only=True)
     old_password = PasswordField(required=True)
     new_password = PasswordField(required=True)
 
@@ -86,10 +76,6 @@ class UpdatePasswordSerializer(serializers.Serializer):
         user = attrs['user']
         if not user.check_password(attrs['old_password']):
             raise serializers.ValidationError({'old_password': 'incorrect password'})
-        # try:
-        #     validate_password(attrs['new_password'])
-        # except Exception as e:
-        #     raise serializers.ValidationError({'new_password': e.messages})
 
         return attrs
 
