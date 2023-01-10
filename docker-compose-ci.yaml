@@ -62,7 +62,7 @@ services:
       migrations:
         condition: service_completed_successfully
     command: >
-      sh -c "python3 manage.py runbot"
+      sh -c "python manage.py runbot"
   db:
     image: postgres:latest
     environment:
