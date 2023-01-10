@@ -132,3 +132,4 @@ class Command(BaseCommand):
                     offset = item.update_id + 1
                     if hasattr(item, 'message'):
                         self.handle_message(item.message)
+
