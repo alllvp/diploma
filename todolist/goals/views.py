@@ -16,6 +16,9 @@ from goals.permissions import BoardPermissions, GoalCategoryPermissions, GoalPer
 
 
 class GoalCategoryCreateView(CreateAPIView):
+    """
+    Create goal's category
+    """
     model = GoalCategory
     permission_classes = [permissions.IsAuthenticated, GoalCategoryPermissions]
     serializer_class = GoalCategoryCreateSerializer
@@ -35,7 +38,7 @@ class GoalCategoryListView(ListAPIView):
     ordering = ["title"]
     search_fields = ["title", "board"]
 
-    def get_queryset(self):
+    def get_queryset(self) -> list[GoalCategory]:
         return GoalCategory.objects.filter(
             board__participants__user=self.request.user,
             is_deleted=False,
@@ -61,7 +64,7 @@ class GoalCategoryView(RetrieveUpdateDestroyAPIView):
 
 class GoalCreateView(CreateAPIView):
     model = Goal
-    permission_classes = [permissions.IsAuthenticated, GoalPermissions]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalCreateSerializer
 
 
@@ -89,7 +92,7 @@ class GoalListView(ListAPIView):
 class GoalView(RetrieveUpdateDestroyAPIView):
     model = Goal
     serializer_class = GoalSerializer
-    permission_classes = [permissions.IsAuthenticated, GoalPermissions]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Goal.objects.filter(

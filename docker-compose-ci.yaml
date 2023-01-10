@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   frontend:
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     restart: always
     depends_on:
       - api
@@ -43,7 +43,26 @@ services:
         condition: service_healthy
     command: >
       sh -c "python manage.py migrate"
-
+  bot:
+    image: alllvp/diploma:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    restart: always
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
+      TG_BOT_API_TOKEN: ${TG_BOT_API_TOKEN}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    command: >
+      sh -c "python3 manage.py runbot"
   db:
     image: postgres:latest
     environment:

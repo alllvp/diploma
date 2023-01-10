@@ -26,6 +26,7 @@ environ.Env.read_env(ENV_FILE_PATH)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY', 'secret')
+TG_BOT_API_TOKEN = env.str('TG_BOT_API_TOKEN', 'secret')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG')
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     # user-defined apps
     'core',
     'goals',
+    'bot',
 
     # third-party apps
     'rest_framework',
