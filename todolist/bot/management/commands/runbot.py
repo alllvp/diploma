@@ -131,7 +131,8 @@ class Command(BaseCommand):
             except Exception as e:
                 print(e)
                 offset += 1
-            for item in res.result:
-                offset = item.update_id + 1
-                if hasattr(item, 'message'):
-                    self.handle_message(item.message)
+            if res:
+                for item in res.result:
+                    offset = item.update_id + 1
+                    if hasattr(item, 'message'):
+                        self.handle_message(item.message)
