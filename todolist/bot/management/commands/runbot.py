@@ -129,7 +129,7 @@ class Command(BaseCommand):
             try:
                 res = self.tg_client.get_updates(offset=offset)
             except Exception as e:
-                print(e)
+                print(f'offset:{offset}, {e}')
                 offset += 1
                 continue
 
