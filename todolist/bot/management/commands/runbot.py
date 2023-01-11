@@ -126,13 +126,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         offset = 0
         while True:
-            try:
-                res = self.tg_client.get_updates(offset=offset)
-            except Exception as e:
-                print(f'offset:{offset}, {e}')
-                offset += 1
-                continue
-
+            res = self.tg_client.get_updates(offset=offset)
             for item in res.result:
                 offset = item.update_id + 1
                 if hasattr(item, 'message'):
