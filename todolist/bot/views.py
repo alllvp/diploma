@@ -19,7 +19,7 @@ class BotVerifyView(generics.UpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         data = self.serializer_class(request.data).data
-        tg_client = TgClient(token=settings.TG_BOT_API_TOKEN)
+        tg_client = TgClient(settings.TG_BOT_API_TOKEN)
         tg_user = TgUser.objects.filter(verification_code=data['verification_code']).first()
         if not tg_user:
             return Response(status=status.HTTP_400_BAD_REQUEST)
