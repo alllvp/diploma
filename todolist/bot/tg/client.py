@@ -1,6 +1,5 @@
 import requests
 from bot.tg import dc
-from marshmallow import ValidationError
 
 
 class TgClient:
@@ -13,15 +12,9 @@ class TgClient:
     def get_updates(self, offset: int = 0, timeout: int = 60) -> dc.GetUpdatesResponse:
         url = self.get_url('getUpdates')
         response = requests.get(url, params={"offset": offset, "timeout": timeout})
-        # try:
-        #     dc.GET_UPDATES_SCHEMA.load(response.json())
-        # except ValidationError as e:
-        #     print(Exception(e))
-        # else:
         return dc.GET_UPDATES_SCHEMA.load(response.json())
 
     def send_message(self, chat_id: int, text: str) -> dc.SendMessageResponse:
         url = self.get_url('sendMessage')
         response = requests.get(url, params={"chat_id": chat_id, "text": text})
         return dc.SEND_MESSAGE_RESPONSE_SCHEMA.load(response.json())
-
