@@ -7,28 +7,44 @@ USER_MODEL = get_user_model()
 
 
 class UserFactory(factory.django.DjangoModelFactory):
+    username = 'mister2'
+    email = 'mister2@test.com'
+    password = 'mister2mister2'
+
     class Meta:
         model = USER_MODEL
-    username = factory.Faker('mister2')
-    email = factory.Faker('mister2@test.com')
-    password = 'mister2mister2'
 
 
 class BoardFactory(factory.django.DjangoModelFactory):
+    title = 'New Board'
+
     class Meta:
         model = Board
 
 
 class BoardParticipantFactory(factory.django.DjangoModelFactory):
+    board = factory.SubFactory(BoardFactory)
+    user = factory.SubFactory(UserFactory)
+
     class Meta:
         model = BoardParticipant
 
 
-class GoalCategoryFactory(factory.django.DjangoModelFactory):
+class CategoryFactory(factory.django.DjangoModelFactory):
+    title = 'New Category'
+    board = factory.SubFactory(BoardFactory)
+    user = factory.SubFactory(UserFactory)
+
     class Meta:
         model = GoalCategory
 
 
 class GoalFactory(factory.django.DjangoModelFactory):
+    title = 'New Goal'
+    description = 'Description of New Goal'
+    user = factory.SubFactory(UserFactory)
+    category = factory.SubFactory(CategoryFactory)
+    due_date = factory.Faker('date_object')
+
     class Meta:
         model = Goal
