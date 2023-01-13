@@ -3,6 +3,9 @@ from django.db import models
 
 
 class TgUser(models.Model):
+    """
+    Telegram User
+    """
     tg_chat_id = models.BigIntegerField()
     tg_user_id = models.BigIntegerField(unique=True)
     tg_username = models.CharField(max_length=32, validators=[MinLengthValidator(5)])

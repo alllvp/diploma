@@ -9,19 +9,32 @@ from django.utils.crypto import get_random_string
 
 
 class TgState:
+    """
+    Determine states of telegram bot
+    """
     DEFAULT = 0
     CATEGORY_CHOOSING = 1
     GOAL_CREATING = 2
 
     def __init__(self, state, category_id=None):
-        self.state = state
-        self.category_id = category_id
+        self._state = state
+        self._category_id = category_id
 
-    def set_state(self, state):
-        self.state = state
+    @property
+    def state(self):
+        return self._state
 
-    def set_category_id(self, category_id):
-        self.category_id = category_id
+    @state.setter
+    def state(self, new_state):
+        self._state = new_state
+
+    @property
+    def category_id(self):
+        return self._category_id
+
+    @category_id.setter
+    def category_id(self, new_category_id):
+        self._category_id = new_category_id
 
 
 STATE = TgState(state=TgState.DEFAULT)
@@ -31,7 +44,17 @@ class Command(BaseCommand):
     help = 'Runs telegram bot'
     tg_client = TgClient(settings.TG_BOT_API_TOKEN)
 
+    @staticmethod
+    def get_ver_code(length: int = 10) -> str:
+        """
+        Generate random string with specified length
+        """
+        return get_random_string(length)
+
     def choose_category(self, msg: Message, tg_user: TgUser):
+        """
+        Choosing category for new goal
+        """
         goal_categories = GoalCategory.objects.filter(
             board__participants__user=tg_user.user,
             is_deleted=False,
@@ -42,17 +65,20 @@ class Command(BaseCommand):
             chat_id=msg.chat.id,
             text=f'Choose category: \n {goal_categories_str}'
         )
-        STATE.set_state(TgState.CATEGORY_CHOOSING)
+        STATE.state = TgState.CATEGORY_CHOOSING
 
     def check_category(self, msg: Message):
+        """
+        Checking if specified category exists
+        """
         category = GoalCategory.objects.filter(title=msg.text).first()
         if category:
             self.tg_client.send_message(
                 chat_id=msg.chat.id,
                 text=f"Enter goal's capture"
             )
-            STATE.set_category_id(category.id)
-            STATE.set_state(TgState.GOAL_CREATING)
+            STATE.category_id = category.id
+            STATE.state = TgState.GOAL_CREATING
         else:
             self.tg_client.send_message(
                 chat_id=msg.chat.id,
@@ -60,6 +86,9 @@ class Command(BaseCommand):
             )
 
     def create_goal(self, msg: Message, tg_user: TgUser):
+        """
+        Create new goal with specified category
+        """
         category = GoalCategory.objects.get(pk=STATE.category_id)
         goal = Goal.objects.create(
             title=msg.text,
@@ -71,9 +100,12 @@ class Command(BaseCommand):
             chat_id=msg.chat.id,
             text=f'Goal "{goal.title}" created!'
         )
-        STATE.set_state(TgState.DEFAULT)
+        STATE.state = TgState.DEFAULT
 
     def get_goals(self, msg: Message, tg_user: TgUser):
+        """
+        Get list of user's goals
+        """
         goals = Goal.objects.filter(
             category__board__participants__user=tg_user.user,
         ).exclude(status=Goal.Status.archived)
@@ -85,13 +117,19 @@ class Command(BaseCommand):
         )
 
     def cancel_operation(self, msg: Message):
-        STATE.set_state(TgState.DEFAULT)
+        """
+        Cancel all previous commands
+        """
+        STATE.state = TgState.DEFAULT
         self.tg_client.send_message(
             chat_id=msg.chat.id,
             text=f'Operation canceled',
         )
 
     def handle_message(self, msg: Message):
+        """
+        Processing of user's message
+        """
         try:
             tg_user, created = TgUser.objects.get_or_create(
                 tg_user_id=msg.msg_from.id,
@@ -100,7 +138,7 @@ class Command(BaseCommand):
         except Exception as e:
             return e
         if created:
-            tg_user.verification_code = get_random_string(10)
+            tg_user.verification_code = self.get_ver_code(10)
             tg_user.save()
             self.tg_client.send_message(
                 chat_id=msg.chat.id,
@@ -124,6 +162,9 @@ class Command(BaseCommand):
             )
 
     def handle(self, *args, **options):
+        """
+        Endless receiving messages from the telegram user
+        """
         offset = 0
         while True:
             res = self.tg_client.get_updates(offset=offset)

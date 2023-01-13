@@ -41,6 +41,7 @@ class GoalCreateSerializer(serializers.ModelSerializer):
 
         return value
 
+
 class GoalSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 

@@ -1,10 +1,10 @@
 import factory
 from django.contrib.auth import get_user_model
-from goals.models import GoalCategory, Board, BoardParticipant, Goal
+from goals.models import GoalCategory, Board, BoardParticipant, Goal, GoalComment
+from bot.models import TgUser
 
 
 USER_MODEL = get_user_model()
-
 
 class UserFactory(factory.django.DjangoModelFactory):
     username = 'mister2'
@@ -48,3 +48,18 @@ class GoalFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Goal
+
+
+class GoalCommentFactory(factory.django.DjangoModelFactory):
+    text = 'test comment'
+    goal = factory.SubFactory(GoalFactory)
+    user = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = GoalComment
+
+
+class TuserFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = TgUser

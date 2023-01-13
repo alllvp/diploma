@@ -9,11 +9,17 @@ USER_MODEL = get_user_model()
 
 
 class RegistrationView(generics.CreateAPIView):
+    """
+    User Registration
+    """
     model = USER_MODEL
     serializer_class = serializers.RegistrationSerializer
 
 
 class LoginView(generics.GenericAPIView):
+    """
+    Login with user's credential
+    """
     serializer_class = serializers.LoginSerializer
 
     def post(self, request, *args, **kwargs):
@@ -25,6 +31,9 @@ class LoginView(generics.GenericAPIView):
 
 
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View user's data
+    """
     serializer_class = serializers.ProfileSerializer
 
     queryset = USER_MODEL.objects.all()
@@ -39,9 +48,11 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdatePasswordView(generics.UpdateAPIView):
+    """
+    Change password
+    """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UpdatePasswordSerializer
 
     def get_object(self):
         return self.request.user
-

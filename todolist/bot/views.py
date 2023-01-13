@@ -12,6 +12,9 @@ from rest_framework.response import Response
 
 
 class BotVerifyView(generics.UpdateAPIView):
+    """
+    Verification of WEBAPP user in telegram
+    """
     model = TgUser
     permission_classes = [IsAuthenticated]
     http_method_names = ['patch']

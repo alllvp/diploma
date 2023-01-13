@@ -4,6 +4,9 @@ from bot.tg import dc
 
 class TgClient:
     def __init__(self, token):
+        """
+        token: token from telegram's BotFather to interact with your bot
+        """
         self.token = token
 
     def get_url(self, method: str):
